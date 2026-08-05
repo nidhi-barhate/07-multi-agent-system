@@ -1,28 +1,36 @@
 from agents.agent import Agent
 from agents.planner_agent import PlannerAgent
+from agents.research_agent import ResearchAgent
+from agents.reviewer_agent import ReviewerAgent
 from services.llm_service import LLMService
 from services.tool_selection_service import ToolSelectionService
 from tools.calculator_tool import CalculatorTool
 from tools.time_tool import TimeTool
 from tools.weather_tool import WeatherTool
 
-class AssistantAgent(Agent):
+class OrchestratorAgent(Agent):
     def __init__(self):
-        super().__init__(name="Assistant Agent",description="General purpose AI assistant.")
+        super().__init__(name="Orchestrator Agent",description="Manages and coordinates other agents.")
         self.llm_service = LLMService()
         self.calculator_tool = CalculatorTool()
         self.weather_tool = WeatherTool()
         self.time_tool = TimeTool()
         self.tool_selection_service = ToolSelectionService() 
         self.planner_agent = PlannerAgent()
+        self.research_agent = ResearchAgent()
+        self.reviewer_agent = ReviewerAgent()
         
     def execute(
             self,
             task: str
     ) -> str:
-        print(f"Executing task: {task}")
+        print("=" * 80)
+        print("ORCHESTRATOR")
+        print("=" * 80)
+        print("Task:", task)
         decision = self.tool_selection_service.select_tool(task)
-        print(f"Tool selected: {decision.tool}, Input: {decision.input}")
+        print("Selected Tool:", decision.tool)
+
         if decision.tool == "calculator":
             return self.calculator_tool.execute(
                 decision.input
@@ -37,4 +45,21 @@ class AssistantAgent(Agent):
             return self.time_tool.execute(
                 decision.input
             )
-        return self.planner_agent.execute(task)
+        print("=" * 80)
+        print("PLANNER")
+        print("=" * 80)
+        planning_result = self.planner_agent.execute(task)
+        print(f"Planning result: {planning_result}")
+
+        print("=" * 80)
+        print("RESEARCH")
+        print("=" * 80)
+        research_result = self.research_agent.execute(task)
+        print(f"Research result: {research_result}")
+        
+        print("=" * 80)
+        print("REVIEWER")
+        print("=" * 80)
+        review_result = self.reviewer_agent.execute(research_result)
+        print(f"Review result: {review_result}")
+        return review_result

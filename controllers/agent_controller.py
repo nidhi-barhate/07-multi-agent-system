@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from agents.assistant_agent import AssistantAgent
+from agents.orchestrator_agent import OrchestratorAgent
 from schemas.agent_request import AgentRequest
 from schemas.agent_response import AgentResponse
 router = APIRouter()
-agent = AssistantAgent()
+agent = OrchestratorAgent()
 
 @router.post("/api/agent",response_model=AgentResponse)
 def execute(request: AgentRequest):

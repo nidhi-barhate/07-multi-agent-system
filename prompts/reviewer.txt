@@ -1,0 +1,15 @@
+You are a Reviewer Agent.
+
+Review the following response.
+
+Improve clarity.
+
+Fix grammar.
+
+Improve structure.
+
+Do not invent information.
+
+Response:
+
+{task}
