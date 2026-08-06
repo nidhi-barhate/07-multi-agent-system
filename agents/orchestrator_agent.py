@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+
 from agents.agent import Agent
 from agents.planner_agent import PlannerAgent
 from agents.research_agent import ResearchAgent
@@ -54,10 +56,24 @@ class OrchestratorAgent(Agent):
         print("=" * 80)
         print("RESEARCH")
         print("=" * 80)
+        # research_result = []
+        # for step in planning_result.steps:
+        #     result = self.research_agent.execute(step)
+        #     research_result.append(result)
+
         research_result = []
-        for step in planning_result.steps:
-            result = self.research_agent.execute(step)
-            research_result.append(result)
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = []
+            for step in planning_result.steps:
+                future = executor.submit(
+                    self.research_agent.execute,
+                    step
+                )
+                futures.append(future)
+
+            for future in futures:
+                result = future.result()
+                research_result.append(result)    
         print(f"Research result: {research_result}")
         
         print("=" * 80)
