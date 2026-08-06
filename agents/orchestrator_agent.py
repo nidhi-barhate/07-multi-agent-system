@@ -54,12 +54,20 @@ class OrchestratorAgent(Agent):
         print("=" * 80)
         print("RESEARCH")
         print("=" * 80)
-        research_result = self.research_agent.execute(task)
+        research_result = []
+        for step in planning_result.steps:
+            result = self.research_agent.execute(step)
+            research_result.append(result)
         print(f"Research result: {research_result}")
         
         print("=" * 80)
         print("REVIEWER")
         print("=" * 80)
-        review_result = self.reviewer_agent.execute(research_result)
+        research_merged_content = "\n\n".join(
+            f"Task: {result.task}\n"
+            f"Research:\n{result.content}"
+            for result in research_result
+        )
+        review_result = self.reviewer_agent.execute(research_merged_content)
         print(f"Review result: {review_result}")
         return review_result

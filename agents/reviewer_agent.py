@@ -3,7 +3,7 @@ from pathlib import Path
 from agents.agent import Agent
 from services.llm_service import LLMService
 
-class ReviewerAgent(Agent):
+class ReviewerAgent(Agent[str]):
 
     def __init__(self):
         super().__init__(
@@ -23,7 +23,7 @@ class ReviewerAgent(Agent):
             encoding="utf-8"
         )
         prompt = template.format(
-            task=task
+            research_results=task
         )
         return self.llm_service.chat(
             prompt

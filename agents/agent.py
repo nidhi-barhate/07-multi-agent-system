@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import Generic, TypeVar
 
-class Agent(ABC):
+T = TypeVar("T")
+
+
+class Agent(ABC, Generic[T]):
     def __init__(
             self,
             name: str,
@@ -8,13 +12,10 @@ class Agent(ABC):
     ):
         self.name = name
         self.description = description
-
+        
     @abstractmethod
     def execute(
-            self,
-            task: str
-    ) -> str:
-        """
-        Execute a task.
-        """
+        self,
+        task: str
+    ) -> T:
         pass

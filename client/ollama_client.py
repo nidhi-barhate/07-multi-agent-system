@@ -32,7 +32,7 @@ class OllamaClient:
         response = requests.post(
             url,
             json=payload,
-            timeout=60
+            timeout=Settings.OLLAMA_TIMEOUT
         )
         response.raise_for_status()
         # print("Status Code:", response.status_code)

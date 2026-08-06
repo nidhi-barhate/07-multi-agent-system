@@ -1,10 +1,12 @@
+import json
 from pathlib import Path
 
 from agents.agent import Agent
+from models.execution_plan import ExecutionPlan
 from services.llm_service import LLMService
 
-
 class PlannerAgent(Agent):
+
     def __init__(self):
         super().__init__(
             name="Planner Agent",
@@ -15,7 +17,8 @@ class PlannerAgent(Agent):
     def execute(
             self,
             task: str
-    ) -> str:
+    ) -> ExecutionPlan:
+
         template = Path(
             "prompts/planner.txt"
         ).read_text(
@@ -24,6 +27,10 @@ class PlannerAgent(Agent):
         prompt = template.format(
             task=task
         )
-        return self.llm_service.chat(
+        response = self.llm_service.chat(
             prompt
         )
+
+        data = json.loads(response)
+
+        return ExecutionPlan(**data)
