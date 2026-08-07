@@ -3,6 +3,7 @@ from pathlib import Path
 from agents.agent import Agent
 from models.agent_result import AgentResult
 from services.llm_service import LLMService
+from advanced_rag_bundle.services.rag_service import RAGService
 
 class ResearchAgent(Agent[AgentResult]):
     def __init__(self):
@@ -11,7 +12,7 @@ class ResearchAgent(Agent[AgentResult]):
             description="Researches a topic."
         )
 
-        self.llm_service = LLMService()
+        self.rag_service = RAGService()
 
     def execute(self, task) -> AgentResult:
         template = Path(
@@ -22,12 +23,12 @@ class ResearchAgent(Agent[AgentResult]):
         prompt = template.format(
             task=task
         )
-        response = self.llm_service.chat(
+        response = self.rag_service.ask(
             prompt
         )
         return AgentResult(
             agent=self.name,
             task=task,
             success=True,
-            content=response
+            content=response.answer
         )

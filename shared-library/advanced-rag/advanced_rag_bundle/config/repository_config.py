@@ -1,0 +1,3 @@
+from advanced_rag_bundle.repository.vector_repository import VectorRepository
+
+knowledge_repository = VectorRepository()
